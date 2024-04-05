@@ -17,13 +17,12 @@ const loaders = {
   secondLoader: loader[1],
 };
 
-let pageParam = 2;
+let pageParam = 1;
 let inputValue = null;
 let galleryLightBox = null;
 
 form.addEventListener('submit', e => {
   e.preventDefault();
-  galleryLightBox = new SimpleLightbox('.gallery-photo a');
   gallery.innerHTML = '';
 
   inputChecker(sessionStorage.getItem('previousInput'), input.value);
@@ -39,8 +38,12 @@ form.addEventListener('submit', e => {
           showPopUpMessage(CONSTANTS.ERROR_MESSAGES.IMAGES_NOT_FOUND, 'error');
         } else {
           gallery.insertAdjacentHTML('beforeend', htmlMarkupCreator(hits));
+          if (!galleryLightBox) {
+            galleryLightBox = new SimpleLightbox('.gallery-photo a');
+          } else {
+            galleryLightBox.refresh();
+          }
           loadMoreBtn.classList.remove('hidden');
-          galleryLightBox.refresh();
         }
         loaders.firstLoader.classList.add('hidden');
       })
@@ -61,6 +64,11 @@ loadMoreBtn.addEventListener('click', e => {
       loaders.secondLoader.classList.add('hidden');
 
       gallery.insertAdjacentHTML('beforeend', htmlMarkupCreator(hits));
+      if (hits.length === CONSTANTS.PHOTOS_PER_PAGE) {
+        loadMoreBtn.classList.remove('hidden');
+      } else {
+        loadMoreBtn.classList.add('hidden');
+      }
       galleryLightBox.refresh();
       gentleScrollCreator();
       photoLimitCalculator(totalHits, pageParam);
@@ -71,6 +79,7 @@ loadMoreBtn.addEventListener('click', e => {
       showPopUpMessage(CONSTANTS.ERROR_MESSAGES.RESOURSE_ERROR, 'error');
     });
 });
+
 function showPopUpMessage(message, status) {
   switch (status) {
     case 'error':
@@ -95,7 +104,7 @@ function photoLimitCalculator(totalAllowedPhotos, page) {
       'notification'
     );
   }
-} //function calculates if the elements on the page exceeded allowed element limit.
+}
 
 function gentleScrollCreator() {
   const firstGalleryChild = gallery.firstElementChild.getBoundingClientRect();
@@ -105,9 +114,8 @@ function gentleScrollCreator() {
   });
 }
 
-//function checks if new input differs from previous and reset the page counter
 function inputChecker(storedItem, currentInput) {
   if (storedItem !== currentInput) {
-    return (pageParam = 2);
+    return (pageParam = 1);
   }
 }
