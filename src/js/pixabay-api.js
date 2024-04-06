@@ -1,17 +1,23 @@
-import axios from 'axios';
-import { CONSTANTS } from './constants.js';
+// У файлі pixabay-api.js зберігай функції для HTTP-запитів.
 
-export async function urlCreator(searchedPhoto, pageParam) {
-  const getUrl = await axios.get(CONSTANTS.API_URL, {
-    params: {
-      key: CONSTANTS.API_KEY,
-      q: searchedPhoto,
-      image_type: CONSTANTS.IMAGE_TYPE,
-      orientation: CONSTANTS.PHOTO_ORIENTATION,
-      safesearch: CONSTANTS.SAFESEARCH,
-      page: pageParam,
-      per_page: CONSTANTS.PHOTOS_PER_PAGE,
-    },
-  });
-  return getUrl;
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import axios from 'axios';
+
+export async function getImages(userQuery, pageNumber) {
+  const BASE_URL = 'https://pixabay.com/api/';
+  const API_KEY = '?key=43036012-df3a1e6422cb462a655402953';
+  const url = BASE_URL + API_KEY;
+
+  const params = {
+    q: userQuery,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: true,
+    per_page: 15,
+    page: pageNumber,
+  };
+  
+  const response = await axios.get(url, { params });
+  return response.data;
 }

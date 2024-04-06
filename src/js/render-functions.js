@@ -1,40 +1,59 @@
-export function htmlMarkupCreator(galleryItems) {
-  return galleryItems
-    .map(item => {
-      const {
-        largeImageURL,
-        webformatURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      } = item;
-      return `<li class="list-item">
-      <div class="gallery-photo">
-        <a href="${largeImageURL}"
-          ><img src="${webformatURL}" alt="${tags}"
-        /></a>
-      </div>
-      <div class="text-wrapper">
-        <div class="list-item-container">
-          <p class="header-text">likes</p>
-          <p>${likes}</p>
-        </div>
-        <div class="list-item-container">
-          <p class="header-text">Views</p>
-          <p>${views}</p>
-        </div>
-        <div class="list-item-container">
-          <p class="header-text">Comments</p>
-          <p>${comments}</p>
-        </div>
-        <div class="list-item-container">
-          <p class="header-text">Downloads</p>
-          <p>${downloads}</p>
-        </div>
-      </div>
-    </li>`;
-    })
-    .join('');
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+let lightbox = new SimpleLightbox('.gallery a', {
+  captionDelay: 250,
+  captionsData: 'alt',
+});
+
+const gallery = document.querySelector('.gallery');
+
+function cardTemplate(obj) {
+  return `<li class="gallery-item">
+<div class="image-card">
+<a class="gallery-link" href="${obj.largeImageURL}">
+<img 
+loading="lazy" 
+class="gallery-image" 
+src="${obj.webformatURL}" 
+alt="${obj.tags}"/>
+
+<div class="data-field">
+
+<div class="img-data">
+<h4 class="data-title">Likes</h4>
+<p class="data-value">${obj.likes}</p>
+</div>
+
+<div class="img-data">
+<h4 class="data-title">Views</h4>
+<p class="data-value">${obj.views}</p>
+</div>
+
+<div class="img-data">
+<h4 class="data-title">Comments</h4>
+<p class="data-value">${obj.comments}</p>
+</div>
+
+<div class="img-data">
+<h4 class="data-title">Downloads</h4>
+<p class="data-value">${obj.downloads}</p>
+</div>
+
+</div>
+</a>
+</div>
+</li>`;
+}
+
+function galleryTemplate(arr) {
+  return arr.map(cardTemplate).join('');
+}
+
+export function renderGallery(images) {
+  const markup = galleryTemplate(images);
+  gallery.insertAdjacentHTML('beforeend', markup);
+
+  lightbox.on('show.simplelightbox', function () {});
+  lightbox.refresh();
 }
