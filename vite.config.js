@@ -26,8 +26,5 @@ export default defineConfig(({ command }) => {
       outDir: '../dist',
     },
     plugins: [injectHTML(), FullReload(['./src/**/**.html'])],
-    optimizeDeps: {
-      exclude: ['fsevents'], // Excluding 'fsevents' from dependency optimization
-    },
   };
 });

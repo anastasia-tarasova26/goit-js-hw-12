@@ -1,5 +1,3 @@
-// У файлі pixabay-api.js зберігай функції для HTTP-запитів.
-
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import axios from 'axios';
@@ -17,7 +15,7 @@ export async function getImages(userQuery, pageNumber) {
     per_page: 15,
     page: pageNumber,
   };
-  
+
   const response = await axios.get(url, { params });
   return response.data;
 }
